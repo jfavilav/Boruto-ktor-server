@@ -1,14 +1,16 @@
-package com.jairoavila
+package com.jairoavila.routes
 
+import com.jairoavila.module
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import kotlin.test.Test
+import org.junit.Test
 import kotlin.test.assertEquals
 
-class ApplicationTest {
+class RootTest {
+
     @Test
-    fun testRoot() {
+    fun `access root endpoint, assert correct information`() {
         withTestApplication(moduleFunction = Application::module) {
             handleRequest(HttpMethod.Get, "/").apply {
                 assertEquals(
@@ -22,4 +24,5 @@ class ApplicationTest {
             }
         }
     }
+
 }
