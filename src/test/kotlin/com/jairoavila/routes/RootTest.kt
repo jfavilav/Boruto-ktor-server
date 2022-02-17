@@ -25,4 +25,21 @@ class RootTest {
         }
     }
 
+    @Test
+    fun `access non existing endpoint, assert not found`() {
+        withTestApplication(moduleFunction = Application::module) {
+            handleRequest(HttpMethod.Get, "/unknown").apply {
+                // Then
+                assertEquals(
+                    expected = HttpStatusCode.NotFound,
+                    actual = response.status()
+                )
+                assertEquals(
+                    expected = "Page Not Found.",
+                    actual = response.content
+                )
+            }
+        }
+    }
+
 }
