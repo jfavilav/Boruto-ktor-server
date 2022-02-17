@@ -1,6 +1,6 @@
 package com.jairoavila
 
-import com.jairoavila.plugins.configureRouting
+import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import kotlin.test.Test
@@ -9,10 +9,16 @@ import kotlin.test.assertEquals
 class ApplicationTest {
     @Test
     fun testRoot() {
-        withTestApplication({ configureRouting() }) {
+        withTestApplication(moduleFunction = Application::module) {
             handleRequest(HttpMethod.Get, "/").apply {
-                assertEquals(HttpStatusCode.OK, response.status())
-                assertEquals("Hello World!", response.content)
+                assertEquals(
+                    expected = HttpStatusCode.OK,
+                    actual = response.status()
+                )
+                assertEquals(
+                    expected = "Welcome to Boruto API!",
+                    actual = response.content
+                )
             }
         }
     }
