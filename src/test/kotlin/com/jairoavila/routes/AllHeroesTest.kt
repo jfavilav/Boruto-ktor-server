@@ -21,16 +21,16 @@ class AllHeroesTest {
         withTestApplication(moduleFunction = Application::module) {
             handleRequest(HttpMethod.Get, "/boruto/heroes").apply {
                 // Given
+                val sut = Json.decodeFromString<ApiResponse>(response.content.toString())
+
                 val expected = ApiResponse(
                     success = true,
                     message = "OK",
                     prevPage = null,
                     nextPage = 2,
-                    heroes = heroRepository.page1
+                    heroes = heroRepository.page1,
+                    lastUpdated = sut.lastUpdated
                 )
-
-                // When
-                val sut = Json.decodeFromString<ApiResponse>(response.content.toString())
 
                 // Then
                 assertEquals(
@@ -58,17 +58,16 @@ class AllHeroesTest {
             )
             pages.forEach { page ->
                 handleRequest(HttpMethod.Get, "/boruto/heroes?page=$page").apply {
+                    val sut = Json.decodeFromString<ApiResponse>(response.content.toString())
                     // Given
                     val expected = ApiResponse(
                         success = true,
                         message = "OK",
                         prevPage = calculatePage(page = page)[PREVIOUS_PAGE_KEY],
                         nextPage = calculatePage(page = page)[NEXT_PAGE_KEY],
-                        heroes = heroes[page - 1]
+                        heroes = heroes[page - 1],
+                        lastUpdated = sut.lastUpdated
                     )
-
-                    // When
-                    val sut = Json.decodeFromString<ApiResponse>(response.content.toString())
 
                     // Then
                     assertEquals(
